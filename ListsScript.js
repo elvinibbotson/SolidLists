@@ -42,7 +42,7 @@ id('main').addEventListener('touchend', function(event) {
         depth--;
         if(depth<1) {
         	list.path='';
-        	id('heading').innerHTML='Lists';
+        	id('heading').innerHTML='SolidLists';
         }
 		else {
 	    	list.path=path[0];
@@ -322,7 +322,7 @@ function populateList() {
 	console.log("populate list for path "+path+" with "+(lists.length+notes.length)+" items - depth: "+depth);
 	console.log('list type is '+list.type);
 	if(path.length<1) {
-		id('heading').innerHTML='Lists';
+		id('heading').innerHTML='SolidLists';
 		id('buttonFind').style.display='block';
 	}
 	else {
