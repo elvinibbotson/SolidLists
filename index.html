@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="black">
+    <title>SolidLists</title>
+    <link rel="stylesheet" type="text/css" href="ListsStyles.css">
+    <link rel="manifest" href="manifest.json">
+    <script src='https://cdn.jsdelivr.net/npm/@inrupt/solid-client-authn-browser/dist/solid-client-authn.bundle.js'></script>
+    <meta name="application-name" content="SolidLists">
+</head>
+<body>
+<div id='header'>
+	<div id='heading'>SolidList</div>
+</div>
+<div id="main">
+	<ul id="list"></ul>
+	<div id='curtain'></div>
+	<div id='buttonFind' class='round-button'></div>
+	<div id='buttonNew' class='round-button'></div>
+	<div id="addDialog">
+		add new <button id='addListButton' class='text-button'>LIST</button>
+		<button id='addNoteButton' class='text-button'>NOTE</button>
+	</div>
+	<div id='findDialog' class='dialog'>
+		find <input type='text' id='findText' size='15'>
+	</div>
+	<div id='listDialog' class='dialog'>
+    	<div id='listDialogTitle' class='dialog-title'>list</div>
+    	<p><input type="text" id="listField" class='textBox' size="15"/></p>
+    	<p><input type='checkbox' id='checkBoxes'>checkboxes</p>
+    	<p><input type='checkbox' id='checkAlpha'>alphabetical</p>
+    	<div class="dialog-buttons">
+    		<button id="deleteListButton" class="icon-button"></button>
+    		<button id="listSaveButton" class="icon-button"></button>
+    		<button id="listAddButton" class="icon-button"></button>
+		</div>
+	</div>
+	<div id='noteDialog' class='dialog'>
+    	<div id='noteTitle' class='dialog-title'>note</div>
+    	<textarea id="noteField" class='textBox' rows='5'></textarea>
+    	<br>
+    	<div class="dialog-buttons">
+    		<button id="deleteNoteButton" class="icon-button"></button>
+	    	<button id="noteSaveButton" class="icon-button"></button>
+    		<button id="noteAddButton" class="icon-button"></button>
+    		<button id='noteUpButton' class='icon-button'></button>
+    		<button id='noteDownButton' class='icon-button'></button>
+		</div>
+	</div>
+	<!--div id='dataDialog' class='dialog'>
+		<div id='dataMessage'></div>
+		<button id='backupButton' class='text-button'>BACKUP</button>
+		<button id='restoreButton' class='text-button'>RESTORE</button>
+	</div-->
+	<div id='messageDialog' class='dialog'>
+		<div id='message'></div>
+	</div>
+	<!--input type="file" id="fileChooser" accept=".json" style="display: none"-->
+</div>
+<script src="ListsScript.js" async></script>
+</body>
+</html>
