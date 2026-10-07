@@ -91,7 +91,8 @@ function showDialog(dialog,show) {
     console.log('current dialog: '+currentDialog);
 }
 // TAP ON HEADER
-id('heading').addEventListener('click',function() {
+id('heading').addEventListener('click',upload);
+	/*
 	if(depth>0) { // list heading - show item edit dialog
 		id('listDialogTitle').innerHTML='list';
 		id(listField.value=list.name);
@@ -108,7 +109,8 @@ id('heading').addEventListener('click',function() {
 		showDialog('listDialog',true);
 	}
 	else showDialog('dataDialog',true);
-});
+	*/
+// });
 // ADD NEW ITEM
 id('buttonNew').addEventListener('click', function(){
 	item={};
