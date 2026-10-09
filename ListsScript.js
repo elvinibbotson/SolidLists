@@ -55,16 +55,6 @@ id('main').addEventListener('touchend', function(event) {
         id('buttonNew').style.display='block';
         loadList();
     }
-    /*
-    else if(currentDialog && drag.x>50) { // drag left to cancel dialogs
-    	console.log('CANCEL');
-		id(currentDialog).style.display='none';
-		currentDialog=null;
-		id('buttonNew').style.display='block';
-		id('buttonFind').style.display=(path=='')?'block':'none';
-		id('curtain').style.height='0';
-    }
-    */
 })
 // CLOSE DIALOG
 id('curtain').addEventListener('click',function() {
@@ -91,26 +81,7 @@ function showDialog(dialog,show) {
     console.log('current dialog: '+currentDialog);
 }
 // TAP ON HEADER
-id('heading').addEventListener('click',upload);
-	/*
-	if(depth>0) { // list heading - show item edit dialog
-		id('listDialogTitle').innerHTML='list';
-		id(listField.value=list.name);
-		console.log('edit list header - '+(lists.length+notes.length)+' items');
-		id('checkAlpha').checked=list.type&4;
-		id('checkBoxes').checked=list.type&2;
-		if((lists.length>0)||(id('list').getElementsByTagName('li').length>0)) {
-			id('deleteListButton').style.display='none';
-			console.log('disable delete');
-		}
-		else id('deleteListButton').style.display='block';
-		id('listAddButton').style.display='none';
-		id('listSaveButton').style.display='block';
-		showDialog('listDialog',true);
-	}
-	else showDialog('dataDialog',true);
-	*/
-// });
+id('buttonSync').addEventListener('click',connect);
 // ADD NEW ITEM
 id('buttonNew').addEventListener('click', function(){
 	item={};
@@ -412,22 +383,18 @@ function populateList() {
 function load() {
 	var data=localStorage.getItem('ListsData');
 	if(!data) {
-		id('dataMessage').innerText='no data - restore backup?';
-		id('backupButton').disabled=true;
-		showDialog('dataDialog',true);
+		message('no data - restore backup?');
 		return;
 	}
 	items=JSON.parse(data);
 	console.log(items.length+' items');
 	list.path='';
 	loadList();
-	var today=Math.floor(new Date().getTime()/86400000);
-	var days=today-backupDay;
-	if(days>4) { // backup reminder every 5 days
-		id('dataMessage').innerText=days+' days since last backup';
-		id('restoreButton').disabled=true;
-		showDialog('dataDialog',true);
-	}
+}
+function save() {
+	var data=JSON.stringify(items);
+	window.localStorage.setItem('ListsData',data);
+	console.log(items.length+' items saved');
 }
 // SOLID CODE
 function connect() {
@@ -436,7 +403,7 @@ function connect() {
 		auth.login({
     		oidcIssuer:"https://privatedatapod.com",
     		redirectUrl:window.location.href,
-    		clientName:"SolidLocker"
+    		clientName:"SolidLists"
     	});
 	}
 	catch(error) {console.error(error.message);}
@@ -444,8 +411,8 @@ function connect() {
 auth.handleIncomingRedirect({restorePreviousSession:true}).then(function(){
 	if(session.info.isLoggedIn) {
 		console.log('logged in as '+session.info.webId);
-		id('saveButton').removeAttribute("disabled");
-    	id('loadButton').removeAttribute("disabled");
+		message('LOGGED IN',false);
+    	sync();
 	}
 });
 async function sync() {
@@ -458,21 +425,23 @@ async function sync() {
 		method: 'GET',
 		headers: {'If-Modified-Since':latest}
 	});
-	console.log('response: '+response.json);
+	console.log('response: '+response.ok);
 	if(response.ok) {
 		var body=await response.json();
 		console.log('response - last modified: '+response.lastModified);
-		var items=body.items;
-		save();
+		items=body.items;
 		message(items.length+' items downloaded',false);
+		save();
 	}
 	else { // local data is newer - upload to pod
-		message('|no download - UPLOAD',false);
+		message('no download - UPLOAD',false);
 		upload();
 	}
+	/*
 	latest=new Date().toString();
 	window.localStorage.setItem('latest',latest);
 	console.log('latest set to '+latest);
+	*/
 	load(); // ensure working with latest dataset
 }
 async function upload() {
@@ -492,7 +461,6 @@ async function upload() {
     		throw new Error(`Response status: ${response.status}`);
     	}
     	console.log('backup saved, status: '+response.status);
-    	showDialog('dataDialog',false);
     	message(items.length+' items saved');
 	}
 	catch (error) {console.error(error.message);alert(error.message);}

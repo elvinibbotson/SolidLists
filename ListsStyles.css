@@ -154,6 +154,14 @@ li {
   font-weight: bold;
   font-size: 1.5em;
 }
+#buttonSync {
+	float: right;
+	width: 24px;
+	height: 24px;
+	border: none;
+	margin-right: 20px;
+	background: url(sync24px.svg) center center no-repeat;
+}
 #main {
     width: 100%;
     position: relative;
