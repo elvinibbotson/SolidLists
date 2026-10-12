@@ -477,6 +477,7 @@ if(!latest) {
 	window.localStorage.setItem('latest',latest);
 }
 load();
+if(session.info.isLoggedIn) sync(); // initial sync
 // implement service worker if browser is PWA friendly
 if (navigator.serviceWorker.controller) {
 	console.log('Active service worker found, no need to register')
