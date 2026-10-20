@@ -383,7 +383,7 @@ function populateList() {
 function load() {
 	var data=localStorage.getItem('ListsData');
 	if(!data) {
-		message('no data - restore backup?');
+		message('no data - sync');
 		return;
 	}
 	items=JSON.parse(data);
