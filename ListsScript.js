@@ -396,7 +396,8 @@ function save() {
 	var data=JSON.stringify(items);
 	window.localStorage.setItem('ListsData',data);
 	console.log(items.length+' items saved');
-	window.localStorage.setItem('latest',new Date().toString());
+	latest=new Date().toString();
+	window.localStorage.setItem('latest',latest);
 }
 // SOLID CODE
 function connect() {
