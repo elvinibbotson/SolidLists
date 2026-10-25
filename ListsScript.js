@@ -15,6 +15,7 @@ var path=[];
 var lastSave=null;
 var months="JanFebMarAprMayJunJulAugSepOctNovDec";
 var dragStart={};
+var syncDay;
 var latest;
 // solid session & authentication...
 const auth=solidClientAuthentication;
@@ -395,6 +396,7 @@ function save() {
 	var data=JSON.stringify(items);
 	window.localStorage.setItem('ListsData',data);
 	console.log(items.length+' items saved');
+	window.localStorage.setItem('latest',new Date().toString());
 }
 // SOLID CODE
 function connect() {
@@ -437,11 +439,8 @@ async function sync() {
 		message('no download - UPLOAD',false);
 		upload();
 	}
-	/*
-	latest=new Date().toString();
-	window.localStorage.setItem('latest',latest);
-	console.log('latest set to '+latest);
-	*/
+	syncDay=new Date()/86400000;
+	window.localStorage.setItem('syncDay',syncDay);
 	load(); // ensure working with latest dataset
 }
 async function upload() {
@@ -460,8 +459,10 @@ async function upload() {
 		if(!response.ok) {
     		throw new Error(`Response status: ${response.status}`);
     	}
-    	console.log('backup saved, status: '+response.status);
-    	message(items.length+' items saved');
+    	console.log('data uploaded, status: '+response.status);
+    	message(items.length+' items uploaded');
+    	syncDay=new Date()/86400000;
+		window.localStorage.setItem('syncDay',syncDay);
 	}
 	catch (error) {console.error(error.message);alert(error.message);}
 }
@@ -476,8 +477,13 @@ if(!latest) {
 	latest=new Date(0).toString(); // default to 1970
 	window.localStorage.setItem('latest',latest);
 }
+syncDay=window.localStorage.getItem('syncDay');
+if(!syncDay) {
+	syncDay=new Date(0)/86400000; // default to 1970
+	window.localStorage.setItem('syncDay',syncDay);
+}
 load();
-if(session.info.isLoggedIn) sync(); // initial sync
+if(new Date()/86400000-syncDay>5) message('More than 5 days since last sync.');
 // implement service worker if browser is PWA friendly
 if (navigator.serviceWorker.controller) {
 	console.log('Active service worker found, no need to register')
