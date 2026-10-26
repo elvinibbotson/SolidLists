@@ -435,6 +435,7 @@ async function sync() {
 		items=body.items;
 		message(items.length+' items downloaded',false);
 		save();
+		disconnect();
 	}
 	else { // local data is newer - upload to pod
 		message('no download - UPLOAD',false);
@@ -448,7 +449,12 @@ async function upload() {
 	if(!session.info.isLoggedIn) {connect(); return;} // ensure connected
   	console.log("BACKUP");
 	var fileName="drive/SolidListsData.json";
-	console.log(items.length+" items - save");
+	console.log(items.length+" items - upload");
+	if(items.length<1) {
+		message('NO DATA');
+		disconnect();
+		return;
+	}
 	var data={'items': items};
 	var json=JSON.stringify(data);
 	try {
@@ -464,8 +470,13 @@ async function upload() {
     	message(items.length+' items uploaded');
     	syncDay=new Date()/86400000;
 		window.localStorage.setItem('syncDay',syncDay);
+		disconnect();
 	}
 	catch (error) {console.error(error.message);alert(error.message);}
+}
+async function disconnect() {
+	var response=await session.logout({logoutType: 'app'});
+	console.log('logout response: ${response.status}');
 }
 // DISPLAY MESSAGE
 function message(text) {
